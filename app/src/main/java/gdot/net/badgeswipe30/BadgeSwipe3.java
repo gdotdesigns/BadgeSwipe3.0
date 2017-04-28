@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +20,8 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
     TextView textView;
     WifiManager wifiManager;
     Context context;
+
+    private static final int BRIGHTNESS_LEVEL = 127;
 
     @Override
     protected void onResume() {
@@ -100,10 +101,21 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
 
     @Override
     public void updateUI(String string) {
+        int brightness = -1;
+        try {
+            brightness=Settings.System.getInt(context.getContentResolver(),Settings.System.SCREEN_BRIGHTNESS_MODE);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (brightness == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC){
+            Settings.System.putInt(context.getContentResolver(),Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        }
+        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,BRIGHTNESS_LEVEL);
+
         if(!wifiManager.isWifiEnabled()){
             wifiManager.setWifiEnabled(true);
         }
-        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,255);
         textView.setText(string);
     }
 }
