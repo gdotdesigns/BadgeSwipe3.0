@@ -1,16 +1,13 @@
 package gdot.net.badgeswipe30;
 
 import android.app.Activity;
-import android.content.Context;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
 /**
