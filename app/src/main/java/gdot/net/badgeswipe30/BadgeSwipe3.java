@@ -2,10 +2,14 @@ package gdot.net.badgeswipe30;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,6 +19,8 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
 
     NfcAdapter nfcAdapter;
     TextView textView;
+    WifiManager wifiManager;
+    Context context;
 
     @Override
     protected void onResume() {
@@ -62,6 +68,8 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_badge_swipe3);
         textView = (TextView) findViewById(R.id.text);
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        context=getApplicationContext();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter != null){
@@ -92,6 +100,10 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
 
     @Override
     public void updateUI(String string) {
+        if(!wifiManager.isWifiEnabled()){
+            wifiManager.setWifiEnabled(true);
+        }
+        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,255);
         textView.setText(string);
     }
 }
