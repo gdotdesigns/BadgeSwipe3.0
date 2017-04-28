@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -20,6 +21,7 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
     TextView textView;
     WifiManager wifiManager;
     Context context;
+    AudioManager audioManager;
 
     private static final int BRIGHTNESS_LEVEL = 127;
 
@@ -71,6 +73,7 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
         textView = (TextView) findViewById(R.id.text);
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         context=getApplicationContext();
+        audioManager= (AudioManager) getSystemService(AUDIO_SERVICE);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter != null){
@@ -116,6 +119,8 @@ public class BadgeSwipe3 extends AppCompatActivity implements UpdateUIInterface 
         if(!wifiManager.isWifiEnabled()){
             wifiManager.setWifiEnabled(true);
         }
+
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
         textView.setText(string);
     }
 }
