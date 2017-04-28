@@ -27,7 +27,7 @@ public class NdefReaderTask extends AsyncTask<Tag,Void,String> {
     protected void onPostExecute(String result) {
         if(result != null){
             //do something
-            if(result == "Work Profile"){
+            if(result.equals("Work Profile")){
                 updateUIInterface.updateUI(result);
             }
         }
