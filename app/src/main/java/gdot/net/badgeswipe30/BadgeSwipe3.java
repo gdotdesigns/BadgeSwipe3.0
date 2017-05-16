@@ -2,8 +2,9 @@ package gdot.net.badgeswipe30;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class BadgeSwipe3 extends Activity {
+public class BadgeSwipe3 extends AppCompatActivity {
 
 
     @Override

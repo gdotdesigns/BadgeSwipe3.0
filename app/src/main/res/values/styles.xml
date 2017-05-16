@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
@@ -11,5 +10,4 @@
     <style name="TransparentTheme" parent="android:Theme.NoDisplay">
 
     </style>
-
 </resources>
