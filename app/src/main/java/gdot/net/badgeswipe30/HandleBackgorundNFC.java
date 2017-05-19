@@ -38,44 +38,55 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_badge_swipe3);
         context=getApplicationContext();
-        getPermissions(context);
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         audioManager= (AudioManager) getSystemService(AUDIO_SERVICE);
+        getPermissions(context);
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter != null){
-            handleIntent(getIntent());
-        }
-        else {
-            Toast.makeText(this, "NFC not available on this device", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     private void getPermissions(Context context) {
 
         //int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_SETTINGS);
 
-        if(ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED){
+
 
             if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_SETTINGS)){
+
                 //show explanation
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION);
+
             }
 
-        else ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION);
+            else {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION);
+            }
         }
 
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         switch (requestCode){
                 case MY_WRITE_SETTINGS_PERMISSION:{
+
                     if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                         //do nfc stuff
+                        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+                        if(nfcAdapter != null){
+                            handleIntent(getIntent());
+                        }
+                        else {
+                            Toast.makeText(this, "NFC not available on this device", Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     else{
                         //disable nfc stuff or give warning
+                        System.out.println("HHHHHHHHHHHHHHHHHHEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOO");
+
                     }
                 }
                 return;
@@ -101,7 +112,7 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
 
     protected void onResume() {
         super.onResume();
-        setupForeGroundDispatch(this,nfcAdapter);
+        //setupForeGroundDispatch(this,nfcAdapter);
     }
 
     @Override
@@ -113,7 +124,7 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
 
     @Override
     protected void onPause() {
-        stopForegroundDispatch(this,nfcAdapter);
+        //stopForegroundDispatch(this,nfcAdapter);
         super.onPause();
     }
 
@@ -157,5 +168,6 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
         }
 
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+        finish();
     }
 }
