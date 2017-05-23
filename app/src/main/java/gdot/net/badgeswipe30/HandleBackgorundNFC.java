@@ -55,37 +55,42 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
 
     private void getPermissions(Context context) {
 
-        //int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_SETTINGS);
-
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED){
-            //System.out.println("HHHHHHHHHHHHHHHHHHEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOO");
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.System.canWrite(this)){
-                    handleIntent(getIntent());
-                }
-
-                else{
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                    intent.setData(Uri.parse("package:" + this.getPackageName()));
-                    startActivity(intent);
-                }
-            }
-
-
-
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_SETTINGS)){
-
-                //show explanation
-                //ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION);
-
-            }
-
-            else {
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION);
-            }
+        boolean permission;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permission = Settings.System.canWrite(this);
+        }
+        else{
+            permission = ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_SETTINGS)== PackageManager.PERMISSION_GRANTED;
         }
 
+        if(permission){
+            handleIntent(getIntent());
+        }
+
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + this.getPackageName()));
+                startActivityForResult(intent,MY_WRITE_SETTINGS_PERMISSION);
+            }
+            else{
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_SETTINGS},MY_WRITE_SETTINGS_PERMISSION );
+            }
+        }
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+
+            if(requestCode == MY_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(this)){
+                handleIntent(getIntent());
+            }
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -100,11 +105,9 @@ public class HandleBackgorundNFC extends BadgeSwipe3 implements UpdateUIInterfac
 
                     else{
                         //disable phone profile stuff or give warning
-
                     }
                 }
                 return;
-
         }
     }
 
